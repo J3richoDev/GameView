@@ -21,35 +21,59 @@
         <div class="mb-4">
           <div class="relative mx-auto">
             <div class="flex flex-row gap-5">
-              <app-game-trailer
-                class="min-w-7/12 h-full"
-                [gameId]="game.id"
-                [gameBg]="game.background_image"
-              />
-              <div class="flex flex-col gap-2 p-5">
-                <div class="text-2xl text-center font-semibold text-green-400">
-                  {{ game.name }}
-                </div>
+              <div class="w-full h-96 min-h-96">
+                <img
+                  class="h-full w-full object-cover"
+                  [src]="game.background_image"
+                  [alt]="game.name"
+                />
+              </div>
+              <div class="flex flex-col justify-between gap-2 p-5 w-6/12">
                 <div>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Neque consequuntur adipisci eum quas, mollitia excepturi
-                  eveniet eius ullam similique, reiciendis cupiditate
-                  accusantium nobis ad culpa at nemo quis iusto consequatur!
-                </div>
-                <div>
-                  <p-tag [value]="game.rating" />
-                  <div class="flex justify-between items-center">
-                    <div class="mt-0 font-semibold text-xl">
-                      {{ "$" + game.rating }}
+                  <div
+                    class="text-3xl text-center mb-5 font-bold text-green-400"
+                  >
+                    {{ game.name }}
+                  </div>
+                  <div class="m-2">
+                    <div class="flex flex-row gap-2 mb-2">
+                      @for (genre of game.genres; track genre.name) {
+                      <p
+                        class="bg-green-400/50 rounded-md text-center w-fit px-1"
+                      >
+                        {{ genre.name }}
+                      </p>
+                      }
                     </div>
-                    <!-- <span>
-                      <p-button
-                        icon="pi pi-heart"
-                        severity="secondary"
-                        [outlined]="true"
-                      />
-                      <p-button icon="pi pi-shopping-cart" styleClass="ml-2" />
-                    </span> -->
+                    <app-game-description [gameId]="game.id" />
+                  </div>
+                </div>
+                <div>
+                  <div class="flex flex-row justify-between my-5 m-2">
+                    <div class="flex flex-row gap-2">
+                      @for (pt of game.platforms; track pt.platform.id) { @if
+                      (svgList.includes(pt.platform.slug)) {
+                      <app-platform-icon [icon]="pt.platform.slug" />
+                      }}
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <i class="pi pi-star-fill text-yellow-300"></i
+                      >{{ game.rating }}
+                    </div>
+                  </div>
+                  <div class="flex gap-4 justify-between items-center">
+                    <button
+                      class="items-center bg-green-600 font-semibold text-md whitespace-nowrap p-3 rounded-xl w-full hover:bg-green-800 transition ease-in-out duration-75 hover:-translate-y-1 cursor-pointer"
+                    >
+                      <span class="pi pi-heart mr-2"></span>
+                      <span class="">Add to Favorites</span>
+                    </button>
+                    <button
+                      class="items-center bg-shark-950 border border-green-500 font-semibold text-sm whitespace-nowrap p-3 rounded-xl hover:bg-shark-900 transition ease-in-out duration-75 hover:-translate-y-1 cursor-pointer"
+                    >
+                      <span class="">View Details</span>
+                      <span class="pi pi-arrow-right ml-2"></span>
+                    </button>
                   </div>
                 </div>
               </div>

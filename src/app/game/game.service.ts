@@ -19,4 +19,10 @@ export class GameService {
     loadGameTrailer(gameId: number) {
         return this.httpClient.get<movieJSON>(this.url + '/games/' + gameId + '/movies' + this.apiKey)
     }
+
+    loadGameDescription(gameId: number) {
+        return this.httpClient.get<any>(this.url + '/games/' + gameId + this.apiKey).pipe(map(item => {
+            return item.description_raw;
+        }))
+    }
 }

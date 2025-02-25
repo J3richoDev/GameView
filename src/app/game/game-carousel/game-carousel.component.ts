@@ -7,10 +7,12 @@ import { TagModule } from 'primeng/tag';
 import { ImageModule } from 'primeng/image';
 import { GameTrailerComponent } from "../game-trailer/game-trailer.component";
 import { SkeletonModule } from 'primeng/skeleton';
+import { PlatformIconComponent } from "../platform-icon/platform-icon.component";
+import { GameDescriptionComponent } from "../game-description/game-description.component";
 
 @Component({
   selector: 'app-game-carousel',
-  imports: [CarouselModule, ButtonModule, TagModule, ImageModule, GameTrailerComponent, SkeletonModule],
+  imports: [CarouselModule, ButtonModule, TagModule, ImageModule, SkeletonModule, PlatformIconComponent, GameDescriptionComponent],
   templateUrl: './game-carousel.component.html',
   styleUrl: './game-carousel.component.css'
 })
@@ -19,6 +21,8 @@ export class GameCarouselComponent implements OnInit {
   private gameService = inject(GameService);
   isFetching = signal(false);
   error = signal('');
+
+  svgList = ['pc', 'playstation4', 'macos', 'nintendo-switch', 'xbox-one', 'android']
 
   games = signal<gameJSON[]>([]);
 

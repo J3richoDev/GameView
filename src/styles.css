@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "tailwindcss-primeui";
 @theme {
     --color-shark-50: #f6f6f6;
     --color-shark-100: #e7e7e7;
