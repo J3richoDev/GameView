@@ -1,0 +1,14 @@
+@if (!isFetching()) { @if (gameTrailer()?.results?.[0]?.data?.max){
+<video #videoPlayer class="max-h-96 min-h-96 w-full" autoplay loop>
+  <source [src]="gameTrailer()?.results?.[0]?.data?.max" type="video/mp4" />
+</video>
+}@else {
+
+<img
+  class="max-h-96 min-h-96 w-full object-cover"
+  [src]="gameBg()"
+  [alt]="gameBg()"
+/>
+} }@else {
+<div>trailer is loading</div>
+}

@@ -1,0 +1,38 @@
+<div class="p-5">
+  <h1 class="font-semibold text-3xl text-green-400 mb-2">Popular Genres</h1>
+  @if(!isFetching()){
+  <div>
+    <p-carousel
+      [value]="genres()"
+      [numVisible]="5"
+      [numScroll]="5"
+      [showIndicators]="false"
+    >
+      <ng-template let-genre #item>
+        <div
+          class="flex flex-col gap-2 rounded-xl shadow bg-shark-900 hover:opacity-70 cursor-pointer m-2 p-2"
+        >
+          <img
+            width="30"
+            height="30"
+            class="h-30 w-full object-cover rounded-xl"
+            [src]="genre.image_background"
+            alt=""
+          />
+          <div class="text-md text-center font-medium">
+            {{ genre.name }}
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+  }@else {
+  <div class="flex flex-row gap-2 p-5">
+    <p-skeleton width="15rem" height="10rem" />
+    <p-skeleton width="15rem" height="10rem" />
+    <p-skeleton width="15rem" height="10rem" />
+    <p-skeleton width="15rem" height="10rem" />
+    <p-skeleton width="15rem" height="10rem" />
+  </div>
+  }
+</div>
