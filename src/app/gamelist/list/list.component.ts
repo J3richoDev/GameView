@@ -16,24 +16,50 @@ export class ListComponent {
   error = signal('');
 
   games = signal<any[]>([]);
-
+  currentPage = signal(1);
+  nextPage = signal<string | null>(null);
+  prevPage = signal<string | null>(null);
 
   ngOnInit() {
+    this.loadGames(this.currentPage());
+  }
+
+  loadGames(page: number) {
     this.isFetching.set(true);
-    const sub = this.glService.loadGameList().subscribe({
+    const sub = this.glService.loadGameList(page).subscribe({
       next: (res) => {
         console.log(res.results);
         this.games.set(res.results);
+        this.nextPage.set(res.next);
+        this.prevPage.set(res.previous);
+        this.currentPage.set(page);
       },
       error: (e) => {
         console.log(e);
+        this.error.set('Failed to load games.');
       },
       complete: () => {
         this.isFetching.set(false);
       }
-    })
+    });
+
     this.df.onDestroy(() => {
       sub.unsubscribe();
-    })
+    });
   }
+
+  goToNextPage() {
+    if (this.nextPage()) {
+      this.loadGames(this.currentPage() + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  goToPrevPage() {
+    if (this.prevPage()) {
+      this.loadGames(this.currentPage() - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
 }

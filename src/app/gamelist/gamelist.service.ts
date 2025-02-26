@@ -34,7 +34,7 @@ export class GameListService {
         );
     }
 
-    loadGameList() {
-        return this.httpClient.get<any>(`${this.url}/games${this.apiKey}`);
+    loadGameList(page: number = 1) {
+        return this.httpClient.get<any>(`${this.url}/games${this.apiKey}&page=${page}`);
     }
 }
