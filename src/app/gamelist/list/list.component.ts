@@ -2,10 +2,11 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { GameListService } from '../gamelist.service';
 import { ButtonModule } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-list',
-  imports: [ButtonModule, Skeleton],
+  imports: [ButtonModule, Skeleton, RouterLink],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css'
 })

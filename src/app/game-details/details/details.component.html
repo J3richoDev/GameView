@@ -1,0 +1,71 @@
+@if (!isFetching()) {
+<div class="p-5 mx-10">
+  <h1 class="font-bold text-5xl text-green-400 mb-2">
+    {{ selectedGame().name }}
+  </h1>
+  <div class="grid lg:grid-cols-3 grid-cols-1">
+    <div class="col-span-2">
+      <p-galleria
+        [value]="screenshots()"
+        [containerStyle]="{ 'max-width': '800px' }"
+        [numVisible]="5"
+      >
+        <ng-template #item let-item>
+          <img [ngSrc]="item.itemImageSrc" width="640" height="360" priority />
+        </ng-template>
+        <ng-template #thumbnail let-item>
+          <img
+            [ngSrc]="item.thumbnailImageSrc"
+            width="213"
+            height="122"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </ng-template>
+      </p-galleria>
+    </div>
+    <div class="col-span-1 flex flex-col items-center">
+      <div class="flex flex-row items-center">
+        <img
+          width="400"
+          height="auto"
+          [src]="selectedGame().background_image"
+          alt=""
+          priority
+        />
+      </div>
+      <div>
+        <app-esrb-rating [rating]="selectedGame().esrb_rating" />
+      </div>
+      <div>
+        @for (genre of selectedGame().genres; track genre.id) {
+        <p class="bg-green-400/50 rounded-md text-center w-fit px-1">
+          {{ genre.name }}
+        </p>
+        }
+      </div>
+      <div>
+        <p class="font-medium">
+          Released:
+          <span class="font-normal">{{ selectedGame().released | date }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 p-2 mr-10">
+    <div class="col-span-2">
+      <h1 class="font-semibold text-2xl mb-2">About</h1>
+      <p class="text-sm mb-2 text-justify max-w-5/6">
+        {{ selectedGame().description_raw }}
+      </p>
+    </div>
+  </div>
+</div>
+}@else {
+<div class="flex flex-row gap-2 p-5">
+  <p-skeleton width="15rem" height="10rem" />
+  <p-skeleton width="15rem" height="10rem" />
+  <p-skeleton width="15rem" height="10rem" />
+  <p-skeleton width="15rem" height="10rem" />
+  <p-skeleton width="15rem" height="10rem" />
+</div>
+}

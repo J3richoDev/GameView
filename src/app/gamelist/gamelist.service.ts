@@ -1,11 +1,12 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { map } from "rxjs";
+import { environment } from "../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class GameListService {
-    url = 'https://api.rawg.io/api';
-    apiKey = '?key=dc583691788d41beb975c67ce134be21';
+    url = environment.apiUrl;
+    apiKey = environment.apiKey;
 
     gameList = signal([]);
     AllGames = this.gameList.asReadonly();

@@ -5,7 +5,7 @@
   @if (!isFetching()) {
   <div class="grid grid-cols-4 gap-5">
     @for (game of games(); track game.id) {
-    <div>
+    <a [routerLink]="['/game/' + game.id]">
       <div
         class="relative rounded-xl items-center bg-shark-900 group cursor-pointer"
       >
@@ -40,7 +40,7 @@
         <div class="font-bold">{{ game.name }}</div>
         <div>{{ game.rating }}</div>
       </div>
-    </div>
+    </a>
     }
   </div>
   <div class="flex justify-end gap-7">
