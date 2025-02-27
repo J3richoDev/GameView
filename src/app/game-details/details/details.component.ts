@@ -4,20 +4,25 @@ import { Skeleton } from 'primeng/skeleton';
 import { GalleriaModule } from 'primeng/galleria';
 import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { EsrbRatingComponent } from "../esrb-rating/esrb-rating.component";
+import { PlatformIconComponent } from "../../game/platform-icon/platform-icon.component";
 
 @Component({
   selector: 'app-details',
-  imports: [Skeleton, GalleriaModule, NgOptimizedImage, EsrbRatingComponent, DatePipe],
+  imports: [Skeleton, GalleriaModule, NgOptimizedImage, EsrbRatingComponent, DatePipe, PlatformIconComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
 })
 export class DetailsComponent implements OnInit {
+  private gdService = inject(GameDetailService);
+  private df = inject(DestroyRef);
+
   gameId = input.required<string>();
   selectedGame = signal<any>('');
   screenshots = signal<any[]>([]);
   isFetching = signal(false);
-  private gdService = inject(GameDetailService);
-  private df = inject(DestroyRef);
+  svgList = ['pc', 'playstation4', 'macos', 'nintendo-switch', 'xbox-one', 'android']
+  showMore: boolean = false;
+  descriptionLimit: number = 500;
 
 
   ngOnInit(): void {
@@ -55,4 +60,13 @@ export class DetailsComponent implements OnInit {
       sub2.unsubscribe();
     })
   }
+
+  toggleShowMore() {
+    this.showMore = !this.showMore;
+  }
+
+  getDisplayedDescription(description: string): string {
+    return this.showMore ? description : description.slice(0, this.descriptionLimit) + (description.length > this.descriptionLimit ? '...' : '');
+  }
+
 }

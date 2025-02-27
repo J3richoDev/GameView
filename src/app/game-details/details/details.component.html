@@ -1,71 +1,168 @@
 @if (!isFetching()) {
 <div class="p-5 mx-10">
-  <h1 class="font-bold text-5xl text-green-400 mb-2">
+  <h1 class="font-bold lg:text-5xl text-3xl text-green-400 mb-2">
     {{ selectedGame().name }}
   </h1>
-  <div class="grid lg:grid-cols-3 grid-cols-1">
-    <div class="col-span-2">
-      <p-galleria
-        [value]="screenshots()"
-        [containerStyle]="{ 'max-width': '800px' }"
-        [numVisible]="5"
-      >
+  <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+    <div class="col-span-2 lg:mb-2 sm:mb-5">
+      <p-galleria [value]="screenshots()" [numVisible]="5">
         <ng-template #item let-item>
-          <img [ngSrc]="item.itemImageSrc" width="640" height="360" priority />
+          <img [ngSrc]="item.itemImageSrc" width="750" height="360" priority />
         </ng-template>
         <ng-template #thumbnail let-item>
           <img
             [ngSrc]="item.thumbnailImageSrc"
-            width="213"
-            height="122"
+            width="120"
+            height="70"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
         </ng-template>
       </p-galleria>
     </div>
-    <div class="col-span-1 flex flex-col items-center">
-      <div class="flex flex-row items-center">
+    <div class="col-span-1 flex flex-col items-center px-5">
+      <div class="flex flex-row items-center mb-5">
         <img
-          width="400"
+          width="420"
           height="auto"
           [src]="selectedGame().background_image"
           alt=""
           priority
         />
       </div>
-      <div>
+      <div
+        class="flex flex-row justify-center w-full items-center my-1 gap-5 mb-5"
+      >
         <app-esrb-rating [rating]="selectedGame().esrb_rating" />
+        <div>
+          <div class="font-medium text-md mb-1">Metascore</div>
+          <div class="flex justify-center mb-1">
+            <p
+              class="border p-1 border-green-500 rounded-lg text-green-400 text-2xl font-semibold"
+            >
+              {{ selectedGame().metacritic }}
+            </p>
+          </div>
+        </div>
       </div>
-      <div>
-        @for (genre of selectedGame().genres; track genre.id) {
-        <p class="bg-green-400/50 rounded-md text-center w-fit px-1">
-          {{ genre.name }}
-        </p>
-        }
+      <div class="border border-b border-shark-800 w-sm"></div>
+      <div class="grid grid-cols-2 mt-3 w-full px-5 gap-4 mb-5">
+        <div
+          class="bg-shark-400 px-2 rounded-lg text-shark-950 font-bold w-fit whitespace-nowrap"
+        >
+          <span class="font-medium">Rating: </span>{{ selectedGame().rating }}
+        </div>
+        <div
+          class="bg-shark-400 px-2 rounded-lg text-shark-950 font-bold w-fit whitespace-nowrap"
+        >
+          <span class="font-medium">Rating count: </span
+          >{{ selectedGame().reviews_count }}
+        </div>
       </div>
-      <div>
-        <p class="font-medium">
-          Released:
-          <span class="font-normal">{{ selectedGame().released | date }}</span>
-        </p>
+      <div class="my-3 px-5 w-full">
+        <button class="bg-green-600 font-semibold rounded-xl w-full p-4 mb-4">
+          Add to My Games
+        </button>
+        <button class="bg-shark-800 font-medium rounded-xl w-full p-4 mb-4">
+          Add to Wishlist
+        </button>
       </div>
     </div>
   </div>
-  <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 p-2 mr-10">
+  <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 p-2 px-4">
     <div class="col-span-2">
-      <h1 class="font-semibold text-2xl mb-2">About</h1>
-      <p class="text-sm mb-2 text-justify max-w-5/6">
-        {{ selectedGame().description_raw }}
-      </p>
+      <div class="mb-10">
+        <h1 class="font-semibold text-2xl mb-2">About</h1>
+        <p class="md:text-md mb-2 text-justify">
+          {{ getDisplayedDescription(selectedGame().description_raw) }}
+        </p>
+        <button
+          (click)="toggleShowMore()"
+          class="text-blue-500 hover:underline"
+        >
+          {{ showMore ? "Show Less" : "Show More" }}
+        </button>
+      </div>
+      <div class="flex flex-row justify-around mb-10">
+        <div>
+          <div class="font-semibold text-xl mb-2">Genres</div>
+          <div class="flex flex-row gap-4">
+            @for (genre of selectedGame().genres; track genre.id) {
+            <p class="bg-green-400/50 rounded-md text-center w-fit px-1">
+              {{ genre.name }}
+            </p>
+            }
+          </div>
+        </div>
+        <div class="border-1 border-r"></div>
+        <div>
+          <div class="font-semibold text-xl mb-2">Platforms</div>
+          <div class="flex flex-row gap-4">
+            @for (pt of selectedGame().platforms; track pt.platform.id) { @if
+            (svgList.includes(pt.platform.slug)) {
+            <app-platform-icon [icon]="pt.platform.slug" />
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-10">
+        <p class="text-shark-600">tags</p>
+        <div class="flex flex-wrap gap-2">
+          @for (item of selectedGame().tags; track item.id) {
+          <span class="px-2 bg-green-700 text-shark-100 rounded-lg w-fit">
+            {{ item.name }}
+          </span>
+          }
+        </div>
+      </div>
+      @for (pt of selectedGame().platforms; track pt.id) { @if(pt.platform.slug
+      ==='pc'){
+      <div class="mb-5">
+        <h1 class="font-semibold text-2xl mb-2">System requirements for PC</h1>
+        <div class="px-2">
+          <p class="font-semibold text-lg">Minimum:</p>
+          <p class="md:text-md mb-2 px-2 text-justify">
+            {{ pt.requirements.minimum }}
+          </p>
+          <p class="font-semibold text-lg">Recommended:</p>
+          <p class="md:text-md mb-2 px-2 text-justify">
+            {{ pt.requirements.recommended }}
+          </p>
+        </div>
+      </div>
+      } }
+    </div>
+    <div class="col-span-1 flex flex-col items-center px-5">
+      <div class="border border-b border-shark-800 w-sm"></div>
+      <div class="w-full px-8 mt-2">
+        <div class="flex flex-row justify-between mb-3">
+          <p>Released Date:</p>
+          <p class="text-green-500">
+            {{ selectedGame().released | date }}
+          </p>
+        </div>
+        <div class="flex flex-row justify-between mb-3">
+          <p>Publisher/s:</p>
+          <p class="text-green-500">
+            @for (item of selectedGame().publishers; track item.id) {
+            {{ item.name }}
+            }
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 }@else {
-<div class="flex flex-row gap-2 p-5">
-  <p-skeleton width="15rem" height="10rem" />
-  <p-skeleton width="15rem" height="10rem" />
-  <p-skeleton width="15rem" height="10rem" />
-  <p-skeleton width="15rem" height="10rem" />
-  <p-skeleton width="15rem" height="10rem" />
+<div class="p-5 px-10">
+  <p-skeleton width="30rem" height="4rem" />
+  <div class="flex flex-row gap-10 p-5">
+    <p-skeleton width="55rem" height="30rem" />
+    <p-skeleton width="25rem" height="15rem" />
+  </div>
+  <div class="flex flex-col gap-2 p-5">
+    <p-skeleton width="55rem" height="15rem" />
+    <p-skeleton width="55rem" height="15rem" />
+    <p-skeleton width="55rem" height="15rem" />
+  </div>
 </div>
 }
