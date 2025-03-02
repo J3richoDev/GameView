@@ -1,10 +1,20 @@
 @if (!isFetching()) {
-<div class="p-5 mx-10">
+<div class="p-5 mx-10 pt-24 z-10">
+  <div class="">
+    <img
+      width="full"
+      height="auto"
+      [src]="selectedGame().background_image"
+      alt=""
+      class="absolute top-1 center w-full opacity-5"
+    />
+  </div>
   <h1 class="font-bold lg:text-5xl text-3xl text-green-400 mb-2">
     {{ selectedGame().name }}
   </h1>
   <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
     <div class="col-span-2 lg:mb-2 sm:mb-5">
+      <!-- carousel -->
       <p-galleria [value]="screenshots()" [numVisible]="5">
         <ng-template #item let-item>
           <img [ngSrc]="item.itemImageSrc" width="750" height="360" priority />
@@ -20,6 +30,7 @@
       </p-galleria>
     </div>
     <div class="col-span-1 flex flex-col items-center px-5">
+      <!-- image 2 -->
       <div class="flex flex-row items-center mb-5">
         <img
           width="420"
@@ -29,6 +40,7 @@
           priority
         />
       </div>
+      <!-- rating  -->
       <div
         class="flex flex-row justify-center w-full items-center my-1 gap-5 mb-5"
       >
@@ -45,6 +57,7 @@
         </div>
       </div>
       <div class="border border-b border-shark-800 w-sm"></div>
+      <!-- rating 2 -->
       <div class="grid grid-cols-2 mt-3 w-full px-5 gap-4 mb-5">
         <div
           class="bg-shark-400 px-2 rounded-lg text-shark-950 font-bold w-fit whitespace-nowrap"
@@ -58,11 +71,16 @@
           >{{ selectedGame().reviews_count }}
         </div>
       </div>
+      <!-- buttons -->
       <div class="my-3 px-5 w-full">
-        <button class="bg-green-600 font-semibold rounded-xl w-full p-4 mb-4">
+        <button
+          class="bg-green-600 font-semibold rounded-xl w-full p-4 mb-4 hover:-translate-y-1 hover:scale-110 transform ease-in-out duration-75"
+        >
           Add to My Games
         </button>
-        <button class="bg-shark-800 font-medium rounded-xl w-full p-4 mb-4">
+        <button
+          class="bg-shark-800 font-medium rounded-xl w-full p-4 mb-4 hover:-translate-y-1 hover:scale-110 transform ease-in-out duration-75"
+        >
           Add to Wishlist
         </button>
       </div>
@@ -72,14 +90,17 @@
     <div class="col-span-2">
       <div class="mb-10">
         <h1 class="font-semibold text-2xl mb-2">About</h1>
-        <p class="md:text-md mb-2 text-justify">
-          {{ getDisplayedDescription(selectedGame().description_raw) }}
-        </p>
-        <button
-          (click)="toggleShowMore()"
-          class="text-blue-500 hover:underline"
+        <p
+          appExpandableTextDirective
+          class="md:text-md mb-2 text-justify"
+          [text]="selectedGame()?.description"
+          [limit]="500"
+          [showMore]="showMoreDescription"
         >
-          {{ showMore ? "Show Less" : "Show More" }}
+          {{ selectedGame().description_raw }}
+        </p>
+        <button (click)="toggleShowMoreDescription()">
+          {{ showMoreDescription ? "Show Less" : "Show More" }}
         </button>
       </div>
       <div class="flex flex-row justify-around mb-10">
@@ -115,21 +136,40 @@
         </div>
       </div>
       @for (pt of selectedGame().platforms; track pt.id) { @if(pt.platform.slug
-      ==='pc'){
+      ==='pc'){@if (pt.requirements.minimum || pt.requirements.recommended) {
       <div class="mb-5">
         <h1 class="font-semibold text-2xl mb-2">System requirements for PC</h1>
-        <div class="px-2">
-          <p class="font-semibold text-lg">Minimum:</p>
-          <p class="md:text-md mb-2 px-2 text-justify">
-            {{ pt.requirements.minimum }}
-          </p>
-          <p class="font-semibold text-lg">Recommended:</p>
-          <p class="md:text-md mb-2 px-2 text-justify">
-            {{ pt.requirements.recommended }}
-          </p>
+        <div class="grid grid-cols-2 gap-5 px-2">
+          <div>
+            <p class="font-semibold text-lg">Minimum:</p>
+            <p
+              appExpandableTextDirective
+              class="md:text-md mb-2 px-2 text-justify"
+              [text]="pt.requirements.minimum"
+              [limit]="300"
+              [showMore]="showMoreRequirements"
+            >
+              {{ pt.requirements.minimum }}
+            </p>
+          </div>
+          <div>
+            <p class="font-semibold text-lg">Recommended:</p>
+            <p
+              appExpandableTextDirective
+              class="md:text-md mb-2 px-2 text-justify"
+              [text]="pt.requirements.recommended"
+              [limit]="300"
+              [showMore]="showMoreRequirements"
+            >
+              {{ pt.requirements.recommended }}
+            </p>
+          </div>
         </div>
+        <button (click)="toggleShowMoreRequirements()">
+          {{ showMoreRequirements ? "Show Less" : "Show More" }}
+        </button>
       </div>
-      } }
+      } } }
     </div>
     <div class="col-span-1 flex flex-col items-center px-5">
       <div class="border border-b border-shark-800 w-sm"></div>
@@ -148,6 +188,12 @@
             }
           </p>
         </div>
+      </div>
+      <div class="my-3 px-5 w-full">
+        <app-stores [stores]="stores()" />
+      </div>
+      <div class="my-3 px-5 w-full">
+        <app-achievements [stickers]="stickers()" />
       </div>
     </div>
   </div>

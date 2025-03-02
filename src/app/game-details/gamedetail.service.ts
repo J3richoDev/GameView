@@ -10,11 +10,8 @@ export class GameDetailService {
     private http = inject(HttpClient);
     private df = inject(DestroyRef);
 
-    LoadGameDetail(id: string) {
-        return this.http.get<any>(this.url + '/games/' + id + this.apiKey);
+    LoadGameDetail(id: string, url: string) {
+        return this.http.get<any>(this.url + '/games/' + id + url + this.apiKey);
     }
 
-    LoadGameScreenshots(id: string) {
-        return this.http.get<any>(this.url + '/games/' + id + '/screenshots' + this.apiKey);
-    }
 }

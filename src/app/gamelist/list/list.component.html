@@ -1,16 +1,13 @@
 <div class="p-5">
-  <div class="mb-2 font-medium">
-    show: <span class="font-normal text-shark-300">recent</span>
-  </div>
-  @if (!isFetching()) {
-  <div class="grid grid-cols-4 gap-5">
-    @for (game of games(); track game.id) {
-    <a [routerLink]="['/game/' + game.id]">
+  @if (list()) {
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    @for (game of list(); track game.id) {
+    <a [routerLink]="['/game/' + game.id]" class="bg-shark-900 rounded-xl">
       <div
-        class="relative rounded-xl items-center bg-shark-900 group cursor-pointer"
+        class="relative rounded-t-xl items-center bg-shark-900 group cursor-pointer overflow-hidden"
       >
         <img
-          class="rounded-xl h-40 w-70 object-cover hover:opacity-60"
+          class="rounded-t-2xl h-32 md:h-40 w-full object-cover hover:scale-110"
           [src]="game.background_image"
           alt=""
         />
@@ -36,42 +33,24 @@
           </button>
         </div>
       </div>
-      <div class="mt-2">
-        <div class="font-bold">{{ game.name }}</div>
-        <div>{{ game.rating }}</div>
+      <div class="p-2">
+        <div class="flex justify-between">
+          <div class="flex flex-row gap-2 mb-1">
+            @for (pt of game.platforms; track pt.platform.id) { @if
+            (svgList.includes(pt.platform.slug)) {
+            <app-platform-icon [icon]="pt.platform.slug" />
+            }}
+          </div>
+          <div
+            class="px-1 py-0.5 border text-green-500 border-green-400 rounded-md text-sm"
+          >
+            {{ game.metacritic }}
+          </div>
+        </div>
+        <div class="font-bold text-lg md:text-xl mb-2">{{ game.name }}</div>
       </div>
     </a>
     }
-  </div>
-  <div class="flex justify-end gap-7">
-    <button
-      class="bg-green-500 rounded-lg p-2 px-4"
-      (click)="goToPrevPage()"
-      [disabled]="!prevPage()"
-    >
-      Prev
-    </button>
-    <span class="p-2 rounded-lg border border-green-500 px-4">{{
-      currentPage()
-    }}</span>
-    <button
-      class="bg-green-500 rounded-lg p-2 px-4"
-      (click)="goToNextPage()"
-      [disabled]="!nextPage()"
-    >
-      Next
-    </button>
-  </div>
-  }@else {
-  <div class="grid grid-cols-4 gap-5">
-    <p-skeleton width="15rem" height="10rem" />
-    <p-skeleton width="15rem" height="10rem" />
-    <p-skeleton width="15rem" height="10rem" />
-    <p-skeleton width="15rem" height="10rem" />
-    <p-skeleton width="15rem" height="10rem" />
-    <p-skeleton width="15rem" height="10rem" />
-    <p-skeleton width="15rem" height="10rem" />
-    <p-skeleton width="15rem" height="10rem" />
   </div>
   }
 </div>

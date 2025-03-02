@@ -1,10 +1,11 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Output, signal } from '@angular/core';
 import { GameListService } from '../gamelist.service';
 import { GameCarouselComponent } from '../../game/game-carousel/game-carousel.component';
 import { TagModule } from 'primeng/tag';
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-genres',
@@ -18,8 +19,9 @@ export class GenresComponent {
   isFetching = signal(false);
   error = signal('');
 
+  @Output() genreSelected = new EventEmitter<string>();
   genres = signal<any[]>([]);
-
+  selectedGenre = signal<string | null>(null);
 
   ngOnInit() {
     this.isFetching.set(true);
@@ -38,5 +40,10 @@ export class GenresComponent {
     this.df.onDestroy(() => {
       sub.unsubscribe();
     })
+  }
+
+  selectGenre(genre: string) {
+    this.selectedGenre.set(genre);
+    this.genreSelected.emit(genre);
   }
 }

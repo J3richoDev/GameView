@@ -1,8 +1,65 @@
-<div class="p-5">
-  <app-searchbar />
-  <app-genres />
-  <div class="flex flex-row px-10 mt-10">
-    <app-filters />
-    <app-list />
+<div class="p-5 pt-24">
+  @if (!selectedGenre()) {
+  <app-genres (genreSelected)="hasGenre($event)" />
+  }
+  <div class="flex flex-row mt-10">
+    <app-filters class="hidden md:flex w-3/12" />
+    <div>
+      @if (selectedGenre()) {
+      <div class="p-5">
+        <h2 class="text-xl font-bold">{{ selectedGenre() }} Games</h2>
+      </div>
+      }
+
+      <div
+        class="flex flex-row justify-between items-center mb-2 font-medium px-5"
+      >
+        <app-sort (sortingChanged)="changeSorting($event)" />
+        <app-filters class="md:hidden block w-3/12" />
+
+        <app-searchbar (searchQuery)="applySearch($event)" />
+      </div>
+
+      @if (!isFetching()) {
+      <app-list [list]="games()" [genre]="selectedGenre()" />} @else {
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+        <p-skeleton width="18rem" height="10rem" />
+      </div>
+      }
+      <div class="flex justify-end gap-7">
+        <button
+          class="bg-green-500 rounded-lg p-2 px-4"
+          (click)="goToPrevPage()"
+          [disabled]="!prevPage()"
+        >
+          Prev
+        </button>
+        <span class="p-2 rounded-lg border border-green-500 px-4">{{
+          currentPage()
+        }}</span>
+        <button
+          class="bg-green-500 rounded-lg p-2 px-4"
+          (click)="goToNextPage()"
+          [disabled]="!nextPage()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
   </div>
 </div>

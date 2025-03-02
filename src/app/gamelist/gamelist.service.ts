@@ -29,13 +29,14 @@ export class GameListService {
         return this.httpClient.get<any>(`${this.url}/genres${this.apiKey}`).pipe(
             map((response) =>
                 response.results.map((genre: any) => ({
+                    id: genre.id,
                     name: genre.name,
                 }))
             )
         );
     }
 
-    loadGameList(page: number = 1) {
-        return this.httpClient.get<any>(`${this.url}/games${this.apiKey}&page=${page}`);
+    loadGameList(queryParams: string) {
+        return this.httpClient.get<any>(`${this.url}/games${this.apiKey}${queryParams}`);
     }
 }

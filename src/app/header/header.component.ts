@@ -15,10 +15,16 @@ interface route {
 })
 export class HeaderComponent {
   tabs = signal<route[]>([
-    { label: 'Home', route: '/' },
+    { label: 'Home', route: '/home' },
     { label: 'Browse', route: '/browse' },
     { label: 'Trailers', route: '/suggest' },
     { label: 'Contact', route: '/contact' },
     { label: 'About', route: '/about' },
   ]);
+
+  menuOpen: boolean = false;
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
 }

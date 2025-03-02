@@ -1,39 +1,80 @@
-<header class="flex justify-between items-center p-2">
-  <div class="flex items-center px-2">
-    <a href="">
-      <img class="h-18 object-cover" src="logo/full_logo.png" alt="logo" />
-    </a>
-  </div>
-  <div>
-    <div class="flex flex-row ga-5">
-      @for(tab of tabs(); track tab.route){
-      <a
-        class="px-2"
-        [routerLinkActive]="'text-green-400'"
-        [routerLink]="tab.route"
-        [routerLinkActiveOptions]="{ exact: true }"
-        #rla="routerLinkActive"
-      >
-        <div
-          class="relative hover:text-green-400 hover:translate-1 delay-75 transition"
-        >
-          <div class="mx-8 my-2 font-bold">
-            {{ tab.label }}
-          </div>
-          @if (rla.isActive) {
-          <img
-            class="absolute top-2.5 right-2"
-            src="header/active.png"
-            alt=""
-          />
-          }
-        </div>
+<header
+  class="px-4 py-2 fixed left-0 right-0 top-0 z-50 backdrop-brightness-50 bg-shark-950"
+>
+  <div class="flex justify-between items-center">
+    <!-- Logo -->
+    <div class="flex items-center px-2">
+      <a href="">
+        <img
+          class="h-12 md:h-18 object-cover"
+          src="logo/full_logo.png"
+          alt="logo"
+        />
       </a>
-      }
     </div>
-  </div>
-  <div>
-    <div class="rounded-full bg-white">
+
+    <!-- Desktop Navigation (Hidden on Mobile) -->
+    <div class="hidden md:flex">
+      <div class="flex flex-row gap-5">
+        @for(tab of tabs(); track tab.route){
+        <a
+          class="px-2"
+          [routerLinkActive]="'text-green-400'"
+          [routerLink]="tab.route"
+          [routerLinkActiveOptions]="{ exact: true }"
+          #rla="routerLinkActive"
+        >
+          <div
+            class="relative hover:text-green-400 hover:translate-1 delay-75 transition"
+          >
+            <div class="mx-4 font-bold">
+              {{ tab.label }}
+            </div>
+            @if (rla.isActive) {
+            <img
+              class="absolute top-2.5 right-2"
+              src="header/active.png"
+              alt=""
+            />
+            }
+          </div>
+        </a>
+        }
+      </div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="md:hidden block p-2" (click)="toggleMenu()">
+      <i class="pi pi-bars text-white text-2xl"></i>
+    </button>
+
+    <!-- Mobile Navigation (Sidebar Menu) -->
+    <div
+      class="fixed top-0 right-0 h-screen w-2/3 bg-shark-900 shadow-lg transform transition-transform duration-300 ease-in-out"
+      [class.translate-x-full]="!menuOpen"
+      [class.translate-x-0]="menuOpen"
+    >
+      <button
+        class="absolute top-4 right-4 text-white text-2xl"
+        (click)="toggleMenu()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+      <nav class="flex flex-col mt-16 space-y-4 px-6 text-white">
+        @for(tab of tabs(); track tab.route){
+        <a
+          class="text-lg font-semibold hover:text-green-400 transition"
+          [routerLink]="tab.route"
+          (click)="toggleMenu()"
+        >
+          {{ tab.label }}
+        </a>
+        }
+      </nav>
+    </div>
+
+    <!-- User Profile (Hidden on Mobile) -->
+    <div class="hidden md:block rounded-full bg-white">
       <img class="h-10 rounded-full" src="logo/logo.png" alt="" />
     </div>
   </div>

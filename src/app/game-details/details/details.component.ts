@@ -5,10 +5,13 @@ import { GalleriaModule } from 'primeng/galleria';
 import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { EsrbRatingComponent } from "../esrb-rating/esrb-rating.component";
 import { PlatformIconComponent } from "../../game/platform-icon/platform-icon.component";
+import { ExpandableTextDirectiveDirective } from '../../expandable-text-directive.directive';
+import { StoresComponent } from "../stores/stores.component";
+import { AchievementsComponent } from "../achievements/achievements.component";
 
 @Component({
   selector: 'app-details',
-  imports: [Skeleton, GalleriaModule, NgOptimizedImage, EsrbRatingComponent, DatePipe, PlatformIconComponent],
+  imports: [Skeleton, GalleriaModule, NgOptimizedImage, EsrbRatingComponent, DatePipe, PlatformIconComponent, ExpandableTextDirectiveDirective, StoresComponent, AchievementsComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
 })
@@ -19,15 +22,18 @@ export class DetailsComponent implements OnInit {
   gameId = input.required<string>();
   selectedGame = signal<any>('');
   screenshots = signal<any[]>([]);
+  stores = signal<any[]>([]);
+  stickers = signal<any[]>([]);
   isFetching = signal(false);
   svgList = ['pc', 'playstation4', 'macos', 'nintendo-switch', 'xbox-one', 'android']
-  showMore: boolean = false;
   descriptionLimit: number = 500;
+  showMoreDescription: boolean = false;
+  showMoreRequirements: boolean = false;
 
 
   ngOnInit(): void {
     this.isFetching.set(true);
-    const sub = this.gdService.LoadGameDetail(this.gameId()).subscribe({
+    const sub = this.gdService.LoadGameDetail(this.gameId(), '').subscribe({
       next: (res) => {
         this.selectedGame.set(res)
       },
@@ -38,7 +44,7 @@ export class DetailsComponent implements OnInit {
         this.isFetching.set(false);
       }
     })
-    const sub2 = this.gdService.LoadGameScreenshots(this.gameId()).subscribe({
+    const ss = this.gdService.LoadGameDetail(this.gameId(), '/screenshots').subscribe({
       next: (res) => {
         this.screenshots.set(
           res.results.map((screenshot: { image: string }) => ({
@@ -55,18 +61,46 @@ export class DetailsComponent implements OnInit {
       }
     })
 
+    const stores = this.gdService.LoadGameDetail(this.gameId(), '/stores').subscribe({
+      next: (res) => {
+        this.stores.set(res.results
+        );
+      },
+      error: (e) => {
+        console.log(e);
+      },
+      complete: () => {
+        this.isFetching.set(false);
+      }
+    })
+
+    const achievements = this.gdService.LoadGameDetail(this.gameId(), '/achievements').subscribe({
+      next: (res) => {
+        this.stickers.set(res.results
+        );
+      },
+      error: (e) => {
+        console.log(e);
+      },
+      complete: () => {
+        this.isFetching.set(false);
+      }
+    })
+
     this.df.onDestroy(() => {
       sub.unsubscribe();
-      sub2.unsubscribe();
+      ss.unsubscribe();
+      stores.unsubscribe();
+      achievements.unsubscribe();
     })
   }
 
-  toggleShowMore() {
-    this.showMore = !this.showMore;
+  toggleShowMoreDescription() {
+    this.showMoreDescription = !this.showMoreDescription;
   }
 
-  getDisplayedDescription(description: string): string {
-    return this.showMore ? description : description.slice(0, this.descriptionLimit) + (description.length > this.descriptionLimit ? '...' : '');
+  toggleShowMoreRequirements() {
+    this.showMoreRequirements = !this.showMoreRequirements;
   }
 
 }
